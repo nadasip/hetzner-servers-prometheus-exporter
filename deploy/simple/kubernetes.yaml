@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hetzner-servers-prometheus-exporter
+  labels:
+    app: hetzner-servers-prometheus-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hetzner-servers-prometheus-exporter
+  template:
+    metadata:
+      labels:
+        app: hetzner-servers-prometheus-exporter
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8800'
+        prometheus.io/path: '/'
+    spec:
+      containers:
+      - name: exporter
+        image: infraduckture/hetzner-servers-prometheus-exporter:latest
+        env:
+        - name: LOAD_BALANCER_ID
+          value: ""
+        - name: ACCEESS_TOKEN
+          value: ""
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 8800
